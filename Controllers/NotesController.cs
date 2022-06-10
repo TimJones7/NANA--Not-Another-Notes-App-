@@ -6,43 +6,51 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NoteSandbax.Data;
+using NoteSandbax.Interfaces;
 using NoteSandbax.Models;
+using NoteSandbax.ViewModels;
 
 namespace NoteSandbax.Controllers
 {
     public class NotesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly INotesRepository _noteRepository;
 
-        public NotesController(AppDbContext context)
+        public NotesController(INotesRepository noteRepository)
         {
-            _context = context;
+            _noteRepository = noteRepository;
         }
 
         // GET: Notes
         public async Task<IActionResult> Index()
         {
-            return _context.Notes != null ? 
-                        View(await _context.Notes.ToListAsync()) :
-                        Problem("Entity set 'AppDbContext.Notes'  is null.");
+            IEnumerable<Notes> _notes = await _noteRepository.GetAll();
+
+            if(_notes == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new MainViewViewModel
+            {
+                notes = _notes
+            };
+        
+            return View(viewModel);
+        
+        
         }
 
         // GET: Notes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null || _context.Notes == null)
+            Notes note = await _noteRepository.GetNote(id);
+            
+            if (note == null)
             {
                 return NotFound();
             }
-
-            var notes = await _context.Notes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (notes == null)
-            {
-                return NotFound();
-            }
-
-            return View(notes);
+            return View(note);
         }
 
         // GET: Notes/Create
@@ -60,22 +68,21 @@ namespace NoteSandbax.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(notes);
-                await _context.SaveChangesAsync();
+                _noteRepository.Add(notes);
                 return RedirectToAction(nameof(Index));
             }
             return View(notes);
         }
 
         // GET: Notes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.Notes == null)
+            if (_noteRepository.NoteExists(id) == false)
             {
-                return NotFound();
+                return NotFound(); //   make my own not found page!
             }
 
-            var notes = await _context.Notes.FindAsync(id);
+            var notes = await _noteRepository.GetNote(id);
             if (notes == null)
             {
                 return NotFound();
@@ -99,8 +106,7 @@ namespace NoteSandbax.Controllers
             {
                 try
                 {
-                    _context.Update(notes);
-                    await _context.SaveChangesAsync();
+                    _noteRepository.Update(notes);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -119,15 +125,14 @@ namespace NoteSandbax.Controllers
         }
 
         // GET: Notes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || _context.Notes == null)
+            if (_noteRepository.NoteExists(id) == false)
             {
-                return NotFound();
+                return NotFound(); //   make my own not found page!
             }
 
-            var notes = await _context.Notes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var notes = await _noteRepository.GetNote(id);
             if (notes == null)
             {
                 return NotFound();
@@ -141,23 +146,80 @@ namespace NoteSandbax.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Notes == null)
+            if (_noteRepository.NoteExists(id) == false)
             {
                 return Problem("Entity set 'AppDbContext.Notes'  is null.");
             }
-            var notes = await _context.Notes.FindAsync(id);
+            var notes = await _noteRepository.GetNote(id);
             if (notes != null)
             {
-                _context.Notes.Remove(notes);
+                _noteRepository.Delete(notes);
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool NotesExists(int id)
         {
-            return (_context.Notes?.Any(e => e.Id == id)).GetValueOrDefault();
+            return _noteRepository.NoteExists(id);
         }
+
+        public IActionResult GetNoteDetailsViewComponent(int id)
+        {
+            return ViewComponent("NoteDetails", id);
+        }
+
+        //  Route annotations aren't needed
+        //[Route("Notes/NoteDetails")]
+        //[Route("Notes/NoteDetails/{id?}")]
+        public PartialViewResult NoteDetails(int id)
+        {
+            Thread.Sleep(500);
+            Notes note =  _noteRepository.GetSingle(id);
+            return PartialView("_NoteDetails", note);
+        }
+
+
+        // GET: Notes/GetEdit/5
+        public async Task<IActionResult> GetEdit(int id)
+        {
+            if (_noteRepository.NoteExists(id) == false)
+            {
+                return NotFound(); //   make my own not found page!
+            }
+
+            var notes = await _noteRepository.GetNote(id);
+            if (notes == null)
+            {
+                return NotFound();
+            }
+            Thread.Sleep(500);
+            return PartialView("_NoteEdit", notes);
+        }
+
+
+        // GET: Notes/GetDelete/5
+        public async Task<IActionResult> GetDelete(int id)
+        {
+            if (_noteRepository.NoteExists(id) == false)
+            {
+                return NotFound(); //   make my own not found page!
+            }
+
+            var notes = await _noteRepository.GetNote(id);
+            if (notes == null)
+            {
+                return NotFound();
+            }
+            Thread.Sleep(500);
+            return PartialView("_NoteDelete", notes);
+        }
+
+        // GET: Notes/GetCreate
+        public IActionResult GetCreate()
+        {
+            Thread.Sleep(500);
+            return PartialView("_NoteCreate");
+        }
+
     }
 }

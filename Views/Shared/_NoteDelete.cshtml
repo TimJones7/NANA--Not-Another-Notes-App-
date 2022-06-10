@@ -1,0 +1,26 @@
+﻿@model NoteSandbax.Models.Notes
+
+
+
+
+
+<!-- Put this part before </body> tag -->
+<input type="checkbox" id="detailModal" class="modal-toggle" />
+<div id="" class="modal modal-open  ">
+    <div class="modal-box relative">
+        <label for="my-modal-3" onclick="closeDetails()" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+        <h3 class="text-lg font-bold">Sure you want to DELETE Note?</h3>
+        <p class="py-4">
+            <img src="https://derpicdn.net/img/2012/9/14/97623/large.gif" width="200px" class="text-center p-2 mx-auto" />
+            <h3 class="text-lg font-bold">@Model.Subject</h3>
+        <p class="py-4">@Model.body</p>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Delete" class="btn btn-error" />
+        </form>
+
+        </p>
+
+
+    </div>
+</div>

@@ -1,0 +1,32 @@
+﻿<div class="navbar bg-base-100">
+    <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl" asp-controller="Home" asp-action="Index">Home</a>
+    </div>
+    <div class="flex-none">
+        <ul class="menu menu-horizontal p-0">
+            <li><a asp-controller="Notes" asp-action="Index">Notes</a></li>
+            <li tabindex="10">
+                <a>
+                    Themes
+                    <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
+                </a>
+                <ul class="p-2 bg-base-100 z-10">
+                    <li><a value='light' onclick="themeSwitch('light');" >Light</a></li>
+                    <li><a value='dark' onclick="themeSwitch('dark');" >Dark</a></li>
+                    <li><a value='dracula' onclick="themeSwitch('dracula');" >Dracula</a></li>
+                    <li><a value='night' onclick="themeSwitch('night');" >Night</a></li>
+                    <li><a value='pastel' onclick="themeSwitch('pastel');" >Pastel</a></li>
+                    <li><a value='coffee' onclick="themeSwitch('coffee');" >Coffee</a></li>
+                    <li><a value='business' onclick="themeSwitch('business');" >Business</a></li>
+                    <li><a value='luxury' onclick="themeSwitch('luxury');" >Luxury</a></li>
+                    <li><a value='aqua' onclick="themeSwitch('aqua');" >Aqua</a></li>
+                    <li><a value='retro' onclick="themeSwitch('retro');" >Retro</a></li>
+                    <li><a value='synthwave' onclick="themeSwitch('synthwave');" >Synthwave</a></li>
+                    <li><a value='cupcake' onclick="themeSwitch('cupcake');" >Cupcake</a></li>
+                    <li><a value='emerald' onclick="themeSwitch('emerald');" >Emerald</a></li>
+
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

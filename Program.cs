@@ -2,15 +2,15 @@
 
 using Microsoft.EntityFrameworkCore;
 using NoteSandbax.Data;
-using MudBlazor.Services;
-
+using NoteSandbax.Interfaces;
+using NoteSandbax.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-
+builder.Services.AddScoped<INotesRepository, NotesRepository>();
 
 
 
@@ -20,8 +20,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddMudServices();
 
 
 var app = builder.Build();
@@ -41,14 +39,12 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapRazorPages();
+
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapRazorPages();
-    endpoints.MapBlazorHub();
-});
 
 app.Run();

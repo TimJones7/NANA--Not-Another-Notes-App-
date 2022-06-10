@@ -1,42 +1,47 @@
-﻿@model IEnumerable<NoteSandbax.Models.Notes>
+﻿@using NoteSandbax.ViewModels
+@model MainViewViewModel
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="text-center text-5xl my-4">
+    <img src="http://31.media.tumblr.com/7eec305e0681db1469d3e6d091688155/tumblr_mns60pbdoO1stmhjno1_400.gif" width="200px" class="text-center p-4 mx-auto" />
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Subject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.body)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.body)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class=" border bg-base-300 p-4">
+    <table class="table mx-auto p-4">
+        <!-- head -->
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Subject</th>
+               @* <th>Body</th>*@
+                <th><a class="btn btn-sm" onclick="loadCreate()" >Add Note</a> </th>
+            </tr>
+        </thead>
+        <tbody>
+           
+
+            @foreach (var item in Model.notes)
+            {
+                <tr>
+                    <th>@Html.DisplayFor(modelItem => item.Id)</th>
+                    <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                    @*<td>@Html.DisplayFor(modelItem => item.body)</td>*@
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-sm" onclick="loadDetails(@item.Id)" >Details</a>
+                            <a class="btn btn-sm" onclick="loadEdit(@item.Id)">Edit</a>
+                            <a class="btn btn-sm" onclick="loadDelete(@item.Id)">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="mx-auto" id="detailHolder">
+        
+    </div>
+</div>
+ 

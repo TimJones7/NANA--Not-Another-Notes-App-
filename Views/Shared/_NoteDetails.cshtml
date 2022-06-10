@@ -1,0 +1,24 @@
+﻿@model NoteSandbax.Models.Notes
+
+@*
+<div class="card w-96 bg-base-100 shadow-xl image-full text-center p-4 mx-auto">
+    <figure><img src="https://media.istockphoto.com/photos/blank-note-picture-id471399483?b=1&k=20&m=471399483&s=170667a&w=0&h=bBZex4OKDcSNZFl0pj0Q6Bxey4G19FSOG8Kw35UoZhg=" /></figure>
+    <div class="card-body">
+        <button class="btn-sm right-0" onclick="closeDetails()">X</button>
+        <h2 class="card-title">@Model.Subject</h2>
+        <p>@Model.body</p>
+
+    </div>
+</div>
+
+*@
+
+<!-- Put this part before </body> tag -->
+<input type="checkbox" id="detailModal" class="modal-toggle" />
+<div id="ddd" class="modal modal-open">
+    <div class="modal-box relative">
+        <label for="my-modal-3" onclick="closeDetails()" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+        <h3 class="text-lg font-bold">@Model.Subject</h3>
+        <p class="py-4">@Model.body</p>
+    </div>
+</div>
